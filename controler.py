@@ -5,17 +5,17 @@ import requests
 
 class Controler:
     socketClient = socketio.Client()
-    timout_between_commands = 3
-    time_lock_open = 1
-    tread = None
-    stop_tread = False
-    door_is_open = False
-    door_is_in_timeout = False
+    timout_between_commands:float = 3
+    time_lock_open:float = 1
+    tread:threading.Thread = None
+    stop_tread:bool = False
+    door_is_open:bool = False
+    door_is_in_timeout:bool = False
 
-    def __init__(self, api_url, code, api_secret):
-        self.api_url = api_url
-        self.code = code
-        self.api_secret = api_secret
+    def __init__(self, api_url:str, code:str, api_secret:str):
+        self.api_url:str = api_url
+        self.code:str = code
+        self.api_secret:str = api_secret
         self.tread = threading.Thread(target=self.treadFunction)
 
     def setup(self):
@@ -77,9 +77,8 @@ class Controler:
         print('close door hardware')
 
     def treadFunction(self):
-        secunds = 0
+        secunds:float = 0
         while True:
-            time.sleep(0.1)
             if self.door_is_open:
                 self.handle_hardware_open_door()
                 time.sleep(self.time_lock_open)
