@@ -28,10 +28,9 @@ class Controler:
         try:
             self.socketClient.wait()
         except KeyboardInterrupt:
-            self.socketClient.disconnect()
             self.stop_tread = True
             self.tread.join()
-            print('disconnected')
+            self.socketClient.disconnect()
         except:
             self.socketClient.disconnect()
             self.run()

@@ -7,9 +7,10 @@ def main():
     controlers:list[Controler] = []
     interval:int = 1
     with open('.env', 'r') as f:
-        for line in f:
-            controler_code = None
-            controler_secret = None
+        controler_code = None
+        controler_secret = None
+        for line in f.readlines():
+            line = line.strip()
             if line.startswith('CONTROLER{}_CODE'.format(interval)):
                 controler_code = line.split('=')[1].strip()
             elif line.startswith('CONTROLER{}_SECRET'.format(interval)):
@@ -25,3 +26,6 @@ def main():
 def run_all_controlers(controlers:list[Controler]):
     for controler in controlers:
         controler.run()
+
+if __name__ == '__main__':
+    main()
