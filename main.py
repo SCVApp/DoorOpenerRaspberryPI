@@ -7,8 +7,8 @@ def main():
     controlers:list[Controler] = []
     interval:int = 1
     with open('.env', 'r') as f:
-        controler_code = None
-        controler_secret = None
+        controler_code:str = None
+        controler_secret:str = None
         for line in f.readlines():
             line = line.strip()
             if line.startswith('CONTROLER{}_CODE'.format(interval)):
@@ -21,6 +21,8 @@ def main():
                 interval += 1
                 if interval > NUMBER_OF_DOORS:
                     break
+                controler_code = None
+                controler_secret = None
     run_all_controlers(controlers)
 
 def run_all_controlers(controlers:list[Controler]):
