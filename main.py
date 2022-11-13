@@ -1,6 +1,27 @@
 from controler import Controler
 
-API_URL = 'http://localhost:5050'
+API_URL:str = 'http://localhost:5050'
+NUMBER_OF_DOORS:int = 1
 
-controler1:Controler = Controler(api_url=API_URL, code='65f138fd8b89618529fd5cffd72013aa75440406993b024314d1abff5dc3b66945e7790f7d9e5f6da812b4df2704d8360372c426641fa6f3f64e5c2583200138', api_secret='c4e21f2d9ac7b1f1f2e9d07a38a4235e14d6deab74141ace2e40511843dfd4e9598f1763b754e35a23313db04715c80607dd6beea4b34fa16fdf02f35eb8de93d1908e5894c8fdd02b826a200b4919f90e3b4784a7dfba5c438b15ee3e86b6b273b0fbb53b4a2e237c16bf786074aa9734d27850a1243137b10826726604130a04b73b8844976bb0e94a1c8ec24813bf154a399331bfe71eb1b6cf833f56bc7a3e5fe1f8ca10a51d8047ab6cfd41ff388699d306f4522625c6b3bc8cc87804f5c739584a142626e78403262c58da5b214f1bc9d29cc4de262a804b19a3bdabc784ac74c33a52f975e1a9ce39826e2d545c737b57849ab8ce51fa1492cfd3001d')
-controler1.run()
+def main():
+    controlers:list[Controler] = []
+    interval:int = 1
+    with open('.env', 'r') as f:
+        for line in f:
+            controler_code = None
+            controler_secret = None
+            if line.startswith('CONTROLER{}_CODE'.format(interval)):
+                controler_code = line.split('=')[1].strip()
+            elif line.startswith('CONTROLER{}_SECRET'.format(interval)):
+                controler_code = line.split('=')[1].strip()
+            if controler_code and controler_secret:
+                controler:Controler = Controler(API_URL, controler_code, controler_secret)
+                controlers.append(controler)
+                interval += 1
+                if interval > NUMBER_OF_DOORS:
+                    break
+    run_all_controlers(controlers)
+
+def run_all_controlers(controlers:list[Controler]):
+    for controler in controlers:
+        controler.run()
