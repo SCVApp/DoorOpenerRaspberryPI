@@ -13,7 +13,7 @@ def main():
             if line.startswith('CONTROLER{}_CODE'.format(interval)):
                 controler_code = line.split('=')[1].strip()
             elif line.startswith('CONTROLER{}_SECRET'.format(interval)):
-                controler_code = line.split('=')[1].strip()
+                controler_secret = line.split('=')[1].strip()
             if controler_code and controler_secret:
                 controler:Controler = Controler(API_URL, controler_code, controler_secret)
                 controlers.append(controler)
