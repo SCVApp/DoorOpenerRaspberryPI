@@ -64,6 +64,7 @@ class Controler:
         def pass_open(data):
             if self.code == data:
                 self.handle_open_door()
+                return "ok"
     
     def run(self):
             self.setup()
