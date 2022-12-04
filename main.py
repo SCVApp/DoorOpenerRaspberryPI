@@ -1,7 +1,9 @@
 from controler import Controler
+import lgpio
 
-API_URL:str = 'http://localhost:5050'
+API_URL:str = 'https://backend.app.scv.si/'
 NUMBER_OF_DOORS:int = 1
+gpio_chip = lgpio.gpiochip_open(0)
 
 def main():
     controlers:list[Controler] = []
@@ -16,7 +18,7 @@ def main():
             elif line.startswith('CONTROLER{}_SECRET'.format(interval)):
                 controler_secret = line.split('=')[1].strip()
             if controler_code and controler_secret:
-                controler:Controler = Controler(API_URL, controler_code, controler_secret)
+                controler:Controler = Controler(API_URL, controler_code, controler_secret,gpio_chip,23)
                 controlers.append(controler)
                 interval += 1
                 if interval > NUMBER_OF_DOORS:
@@ -28,6 +30,8 @@ def main():
 def run_all_controlers(controlers:list[Controler]):
     for controler in controlers:
         controler.run()
+    print("end is near")
+    lgpio.gpiochip_close(gpio_chip)
 
 if __name__ == '__main__':
     main()
