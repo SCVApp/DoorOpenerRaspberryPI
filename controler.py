@@ -21,8 +21,15 @@ class Controler:
     def setup(self):
             self.call_backs()
             self.tread.start()
-            self.socketClient.connect(self.api_url, headers={'code': self.code, 'secret': self.api_secret})
-        
+            while True:
+                try:
+                    self.socketClient.connect(self.api_url, headers={'code': self.code, 'secret': self.api_secret})
+                except:
+                    print("Error connecting to socket")
+                    time.sleep(15)
+                    continue
+                if self.socketClient.connected:
+                    break
 
     def loop(self): 
         try:
@@ -33,6 +40,7 @@ class Controler:
             self.socketClient.disconnect()
         except:
             self.socketClient.disconnect()
+            print("Error with socket")
             self.run()
     
     def handle_open_door(self):
