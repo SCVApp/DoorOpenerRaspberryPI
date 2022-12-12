@@ -30,14 +30,14 @@ class Controler:
                 self.tread.daemon = True
                 self.tread.start()
             while True:
+                if self.socketClient.connected:
+                    break
                 try:
                     self.socketClient.connect(self.api_url, headers={'code': self.code, 'secret': self.api_secret})
                 except:
                     print("Error connecting to socket")
                     time.sleep(15)
                     continue
-                if self.socketClient.connected:
-                    break
             lgpio.gpio_claim_output(self.gpio_chip, self.pin_number)
 
     def loop(self): 
