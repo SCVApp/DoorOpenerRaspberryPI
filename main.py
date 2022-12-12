@@ -46,8 +46,15 @@ def run_all_controlers(controlers:list[Controler]):
             time.sleep(5) 
 
 def run_controler(controler:Controler):
-    print("Thread started. Controller pin_n: {}".format(controler.pin_number))
-    controler.run()
+    while True:
+        try:
+            print("Thread started. Controller pin_n: {}".format(controler.pin_number))
+            controler.run()
+        except:
+            print("Error with controler")
+            time.sleep(5)
+            continue
+        break
 
 if __name__ == '__main__':
     main()
