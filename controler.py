@@ -45,6 +45,7 @@ class Controler:
             self.tread.join()
             lgpio.gpio_write(self.gpio_chip, self.pin_number, 0)
             self.socketClient.disconnect()
+            self.run()
         except:
             self.socketClient.disconnect()
             print("Error with socket")
@@ -74,6 +75,7 @@ class Controler:
         
         @self.socketClient.event
         def disconnect():
+            self.run()
             print('disconnected from server')
         
         @self.socketClient.on('open_door')
