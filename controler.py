@@ -26,8 +26,9 @@ class Controler:
     def setup(self):
             self.stop_tread = False
             self.call_backs()
-            self.tread.daemon = True
-            self.tread.start()
+            if not self.tread.is_alive():
+                self.tread.daemon = True
+                self.tread.start()
             while True:
                 try:
                     self.socketClient.connect(self.api_url, headers={'code': self.code, 'secret': self.api_secret})
@@ -100,6 +101,7 @@ class Controler:
 
     def treadFunction(self):
         secunds:float = 0
+        print("tread started")
         while True:
             if self.door_is_open:
                 self.handle_hardware_open_door()
