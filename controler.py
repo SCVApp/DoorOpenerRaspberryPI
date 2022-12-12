@@ -24,6 +24,7 @@ class Controler:
         self.pin_number = pin_number
 
     def setup(self):
+            self.stop_tread = False
             self.call_backs()
             self.tread.daemon = True
             self.tread.start()

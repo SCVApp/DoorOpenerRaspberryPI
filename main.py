@@ -8,7 +8,10 @@ NUMBER_OF_DOORS:int = 1
 gpio_chip = lgpio.gpiochip_open(0)
 
 def main():
+    lgpio.gpio_claim_output(gpio_chip, 22)
+    lgpio.gpio_write(gpio_chip, 22, 1)
     controlers:list[Controler] = []
+    list_of_pins:list[int] = [23,24]
     interval:int = 1
     with open('.env', 'r') as f:
         controler_code:str = None
@@ -20,7 +23,7 @@ def main():
             elif line.startswith('CONTROLER{}_SECRET'.format(interval)):
                 controler_secret = line.split('=')[1].strip()
             if controler_code and controler_secret:
-                controler:Controler = Controler(API_URL, controler_code, controler_secret,gpio_chip,23)
+                controler:Controler = Controler(API_URL, controler_code, controler_secret,gpio_chip,list_of_pins[interval-1])
                 controlers.append(controler)
                 interval += 1
                 if interval > NUMBER_OF_DOORS:
