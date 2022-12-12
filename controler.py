@@ -25,6 +25,7 @@ class Controler:
 
     def setup(self):
             self.call_backs()
+            self.tread.daemon = True
             self.tread.start()
             while True:
                 try:
