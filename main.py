@@ -1,6 +1,7 @@
 from controler import Controler
 import lgpio
 import threading
+import time
 
 API_URL:str = 'https://backend.app.scv.si/'
 NUMBER_OF_DOORS:int = 1
@@ -35,10 +36,14 @@ def run_all_controlers(controlers:list[Controler]):
         thread.daemon = True
         threads.append(thread)
         thread.start()
-    print("end is near")
-    lgpio.gpiochip_close(gpio_chip)
+        print("Thread start")
+    if int(len(threads)) > 0:
+        while threads[0].is_alive():
+            print("Program is running. Number of threads: {}".format(str(len(threading.enumerate()))))
+            time.sleep(5) 
 
 def run_controler(controler:Controler):
+    print("Thread started. Controller pin_n: {}".format(controler.pin_number))
     controler.run()
 
 if __name__ == '__main__':
