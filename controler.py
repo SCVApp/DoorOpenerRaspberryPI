@@ -47,9 +47,11 @@ class Controler:
                     break
                 try:
                     self.socketClient.connect(self.api_url, headers={'code': self.code, 'secret': self.api_secret})
+                    if self.socketClient.connected:
+                        break
                     time.sleep(5)
                     print("Connecting to socket...")
-                except:
+                except Exception as e:
                     print("Error connecting to socket")
                     print(e)
                     time.sleep(5)
