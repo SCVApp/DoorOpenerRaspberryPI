@@ -46,7 +46,7 @@ class Controler:
                     self.socketClient.connect(self.api_url, headers={'code': self.code, 'secret': self.api_secret})
                 except:
                     print("Error connecting to socket")
-                    time.sleep(15)
+                    time.sleep(5)
                     continue
             lgpio.gpio_claim_output(self.gpio_chip, self.pin_number)
 
