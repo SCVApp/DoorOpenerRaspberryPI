@@ -5,6 +5,7 @@ import time
 
 API_URL:str = 'https://backend.app.scv.si/'
 NUMBER_OF_DOORS:int = 1
+lgpio.gpiochip_close(0)
 gpio_chip = lgpio.gpiochip_open(0)
 
 def main():
