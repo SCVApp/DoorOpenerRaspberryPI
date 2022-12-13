@@ -1,15 +1,14 @@
 from controler import Controler
-import lgpio
+# import lgpio
 import threading
+import socketio
 import time
 
-API_URL:str = 'https://backend.app.scv.si/'
+API_URL:str = 'http://localhost:5050'
 NUMBER_OF_DOORS:int = 2
-gpio_chip = lgpio.gpiochip_open(0)
+# gpio_chip = lgpio.gpiochip_open(0)
 
-def main():
-    lgpio.gpio_claim_output(gpio_chip, 22)
-    lgpio.gpio_write(gpio_chip, 22, 1)
+def getControllersFromENVFile():
     controlers:list[Controler] = []
     list_of_pins:list[int] = [23,24]
     interval:int = 1
@@ -23,39 +22,48 @@ def main():
             elif line.startswith('CONTROLER{}_SECRET'.format(interval)):
                 controler_secret = line.split('=')[1].strip()
             if controler_code and controler_secret:
-                controler:Controler = Controler(API_URL, controler_code, controler_secret,gpio_chip,list_of_pins[interval-1])
+                controler:Controler = Controler(API_URL, controler_code, controler_secret,None,list_of_pins[interval-1])
                 controlers.append(controler)
                 interval += 1
                 if interval > NUMBER_OF_DOORS:
                     break
                 controler_code = None
                 controler_secret = None
-    run_all_controlers(controlers)
+    return controlers
 
-def run_all_controlers(controlers:list[Controler]):
-    threads:list[threading.Thread] = []
-    for controler in controlers:
-        thread = threading.Thread(target=run_controler, args=(controler,))
-        thread.daemon = True
-        threads.append(thread)
-        thread.start()
-        print("Thread start")
-    if int(len(threads)) > 0:
-        while threads[0].is_alive():
-            print("Program is running. Number of threads: {}".format(str(len(threading.enumerate()))))
-            time.sleep(5) 
+def main():
+    # lgpio.gpio_claim_output(gpio_chip, 22)
+    # lgpio.gpio_write(gpio_chip, 22, 1)
+    controlers:list[Controler] = getControllersFromENVFile()
+    if len(controlers) == 0:
+        print('No controlers found')
+        return
 
-def run_controler(controler:Controler):
-    while True:
-        try:
-            print("Thread started. Controller pin_n: {}".format(controler.pin_number))
-            controler.setup()
-            controler.loop()
-            controler.reset()
-        except:
-            print("Error with controler")
-            time.sleep(5)
-            continue
+    sio = socketio.Client()
+
+    @sio.event
+    def connect():
+        print('connection established')
+
+    @sio.event
+    def disconnect():
+        print('disconnected from server')
+
+    @sio.on('open_door')
+    def pass_open_door(data):
+        for controler in controlers:
+            if controler.code == data:
+                controler.run()
+                return "ok"
+
+
+    sio.connect(API_URL,headers={'code': controlers[0].code, 'secret': controlers[0].api_secret})
+    sio.wait()
 
 if __name__ == '__main__':
-    main()
+    while True:
+        try:
+            main()
+        except Exception as e:
+            print(e)
+            time.sleep(5)
