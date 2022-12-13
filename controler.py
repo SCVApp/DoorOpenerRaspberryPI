@@ -51,6 +51,7 @@ class Controler:
                     print("Connecting to socket...")
                 except:
                     print("Error connecting to socket")
+                    print(e)
                     time.sleep(5)
                     continue
             lgpio.gpio_claim_output(self.gpio_chip, self.pin_number)
