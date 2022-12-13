@@ -49,9 +49,9 @@ def run_controler(controler:Controler):
     while True:
         try:
             print("Thread started. Controller pin_n: {}".format(controler.pin_number))
-            controler.reset()
             controler.setup()
             controler.loop()
+            controler.reset()
         except:
             print("Error with controler")
             time.sleep(5)
