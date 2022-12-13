@@ -23,6 +23,16 @@ class Controler:
         self.gpio_chip = gpio_chip
         self.pin_number = pin_number
 
+    def reset(self):
+        self.door_is_open = False
+        self.door_is_in_timeout = False
+        if self.thread.is_alive():
+            self.stop_tread = True
+            self.tread.join()
+        self.stop_tread = False
+        lgpio.gpio_write(self.gpio_chip, self.pin_number, 0)
+        self.socketClient.disconnect()
+
     def setup(self):
             self.stop_tread = False
             self.call_backs()
@@ -44,16 +54,10 @@ class Controler:
         try:
             self.socketClient.wait()
         except KeyboardInterrupt:
-            self.stop_tread = True
-            self.tread.join()
-            lgpio.gpio_write(self.gpio_chip, self.pin_number, 0)
-            self.socketClient.disconnect()
-            self.run()
+            self.reset()
         except:
-            self.socketClient.disconnect()
+            self.reset()
             print("Error with socket")
-            self.run()
-            lgpio.gpio_write(self.gpio_chip, self.pin_number, 0)
     
     def handle_open_door(self):
         if self.door_is_in_timeout or self.door_is_open:
