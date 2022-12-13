@@ -1,12 +1,12 @@
 from controler import Controler
-# import lgpio
+import lgpio
 import threading
 import socketio
 import time
 
-API_URL:str = 'http://localhost:5050'
+API_URL:str = 'https://backend.app.scv.si'
 NUMBER_OF_DOORS:int = 2
-# gpio_chip = lgpio.gpiochip_open(0)
+gpio_chip = lgpio.gpiochip_open(0)
 
 def getControllersFromENVFile():
     controlers:list[Controler] = []
@@ -32,8 +32,8 @@ def getControllersFromENVFile():
     return controlers
 
 def main():
-    # lgpio.gpio_claim_output(gpio_chip, 22)
-    # lgpio.gpio_write(gpio_chip, 22, 1)
+    lgpio.gpio_claim_output(gpio_chip, 22)
+    lgpio.gpio_write(gpio_chip, 22, 1)
     controlers:list[Controler] = getControllersFromENVFile()
     if len(controlers) == 0:
         print('No controlers found')

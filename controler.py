@@ -2,7 +2,7 @@ import threading
 import socketio
 import time
 import requests
-# import lgpio
+import lgpio
 
 class Controler:
     timout_between_commands:float = 3
@@ -42,10 +42,10 @@ class Controler:
 
     def hardware_open_door(self):
         print('close door hardware')
-        # lgpio.gpio_write(self.gpio_chip, self.pin_number, 1)
+        lgpio.gpio_write(self.gpio_chip, self.pin_number, 1)
     
     def hardware_close_door(self):
         print('open door hardware')
-        # lgpio.gpio_write(self.gpio_chip, self.pin_number, 0)
+        lgpio.gpio_write(self.gpio_chip, self.pin_number, 0)
 
         
