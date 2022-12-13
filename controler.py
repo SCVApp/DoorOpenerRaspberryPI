@@ -32,6 +32,9 @@ class Controler:
         self.stop_tread = False
         lgpio.gpio_write(self.gpio_chip, self.pin_number, 0)
         self.socketClient.disconnect()
+        self.tread = threading.Thread(target=self.treadFunction)
+        self.tread.daemon = True
+        self.socketClient = socketio.Client()
 
     def setup(self):
             self.stop_tread = False
@@ -44,6 +47,8 @@ class Controler:
                     break
                 try:
                     self.socketClient.connect(self.api_url, headers={'code': self.code, 'secret': self.api_secret})
+                    time.sleep(5)
+                    print("Connecting to socket...")
                 except:
                     print("Error connecting to socket")
                     time.sleep(5)
