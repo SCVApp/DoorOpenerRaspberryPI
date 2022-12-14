@@ -22,7 +22,7 @@ def getControllersFromENVFile():
             elif line.startswith('CONTROLER{}_SECRET'.format(interval)):
                 controler_secret = line.split('=')[1].strip()
             if controler_code and controler_secret:
-                controler:Controler = Controler(API_URL, controler_code, controler_secret,None,list_of_pins[interval-1])
+                controler:Controler = Controler(API_URL, controler_code, controler_secret,gpio_chip,list_of_pins[interval-1])
                 controlers.append(controler)
                 interval += 1
                 if interval > NUMBER_OF_DOORS:
