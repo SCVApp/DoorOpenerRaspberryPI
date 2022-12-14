@@ -21,19 +21,18 @@ class Controler:
         self.pin_number = pin_number
 
     def run(self):
-        if self.tread.is_alive():
-            return
         if self.door_is_in_timeout:
             return
+        self.tread = threading.Thread(target=self.treadFunction)
         self.tread.start()
 
     def treadFunction(self):
         if self.door_is_in_timeout:
             return
+        self.door_is_in_timeout = True
         url = self.api_url + '/pass/door/is_opened'
         res = requests.get(url,headers={"door_code":self.code,"access_secret":self.api_secret})
         if res.status_code == 200:
-            self.door_is_in_timeout = True
             self.hardware_open_door()
             time.sleep(self.time_lock_open)
             self.hardware_close_door()
