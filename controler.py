@@ -40,11 +40,11 @@ class Controler:
             self.door_is_in_timeout = False
 
     def hardware_open_door(self):
-        print('close door hardware')
+        print('open door hardware')
         lgpio.gpio_write(self.gpio_chip, self.pin_number, 1)
     
     def hardware_close_door(self):
-        print('open door hardware')
+        print('close door hardware')
         lgpio.gpio_write(self.gpio_chip, self.pin_number, 0)
 
         
